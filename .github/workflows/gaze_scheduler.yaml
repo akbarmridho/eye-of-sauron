@@ -1,0 +1,26 @@
+name: Gaze Scheduler
+
+on:
+  schedule:
+    - cron: "0 1,13 * * *" # Runs at 1am and 1pm UTC (8am and 8pm UTC+7)
+  workflow_dispatch: # Allows manual trigger for testing
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node gaze.js
